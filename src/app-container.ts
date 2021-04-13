@@ -1,6 +1,9 @@
-import {css, customElement, html, LitElement, property} from 'lit-element'
+import {css, customElement, html, LitElement, property, query} from 'lit-element'
 import ms from 'ms'
 import { determineColor } from './temperatures';
+import '@material/mwc-snackbar'
+import { Snackbar } from '@material/mwc-snackbar';
+import { round } from './util';
 
 declare global {
   interface Window {
@@ -28,6 +31,11 @@ export class AppContainer extends LitElement {
   @property({type:Array})
   private pairs: Pair[] = [];
 
+  @property({type:Number})
+  private average = 0;
+
+  @query('mwc-snackbar') snackbar!: Snackbar;
+
   constructor() {
     super()
 
@@ -41,18 +49,20 @@ export class AppContainer extends LitElement {
   #pairs {
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 62px;
   }
   .pair {
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: grey;
-    margin: 2px;
+    /* margin: 2px; */
     padding: 8px;
     box-sizing: border-box;
     color: white;
     font-size: 80%;
     cursor: pointer;
+    width: 122px;
   }
   `
 
@@ -75,6 +85,8 @@ export class AppContainer extends LitElement {
       `
     })}
     </div>
+
+    <mwc-snackbar labelText="${round(this.average)}%" timeoutMs="-1" leading open></mwc-snackbar>
     `
   }
 
@@ -101,5 +113,15 @@ export class AppContainer extends LitElement {
       c: parseFloat(p.priceChangePercent),
       v: parseFloat(p.volume)
     }))
+
+    this.updateAverage()
+  }
+
+  updateAverage () {
+    let total = 0;
+    for (const pair of this.pairs) {
+      total += pair.c;
+    }
+    this.average = total / this.pairs.length;
   }
 }
