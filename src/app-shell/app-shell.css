@@ -1,0 +1,33 @@
+:host {
+	/*position: absolute;*/
+	/*inset: 0;*/
+	display: flex;
+	/*align-items: flex-start;*/
+	flex-wrap: wrap;
+}
+
+.ticket {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background: grey;
+	color: white;
+	padding: 12px;
+	position: relative;
+}
+
+.ticket[selected] {
+	color: black;
+}
+
+#selectedBackground {
+	background: #ffeb3b85;
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+}
+
+.ticket span {
+	z-index: 1;
+}
